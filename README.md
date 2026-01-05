@@ -56,7 +56,7 @@ Further details will be provided in CONTRIBUTING.md.
 ## License 
 This project is licensed under the GNU GENERAL PUBLIC LICENSE 3.0.
 
-See the [LICENSE](LICENSE.md) file for details.
+See the [LICENSE](LICENSE) file for details.
 
 ### Final Note
 This project started as a personal initiative focused on learning and technical growth, but with the ambition of becoming a **clear, open, and collaborative implementation of a functional VPN.**
