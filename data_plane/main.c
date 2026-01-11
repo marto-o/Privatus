@@ -1,29 +1,24 @@
 #include "tun.h"
+#include "udp.h"
+#include "vpn.h"
+#include "config.h"
 #include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/if.h>
-#include <linux/if_tun.h>
 
-int main(void)
+int main(int argc, char *argv[])
 {
-    char tun_name[IFNAMSIZ] = "tun0";
-
-    int tun_fd = tun_alloc(tun_name);
-    if (tun_fd < 0) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <peer-ip>\n", argv[0]);
         return 1;
     }
 
-    printf("TUN interface created: %s\n", tun_name);
+    char tun_name[IFNAMSIZ] = "tun0";
+    struct sockaddr_in peer;
 
-    while (1) {
-        char buf[1500];
-        int n = read(tun_fd, buf, sizeof(buf));
-        if (n > 0) {
-            printf("Packet received: %d bytes\n", n);
-        }
-    }
+    int tun_fd = tun_alloc(tun_name);
+    int udp_fd = udp_init_client(argv[1], VPN_PORT, &peer);
+
+    printf("TUN: %s\n", tun_name);
+    printf("Peer: %s:%d\n", argv[1], VPN_PORT);
+
+    vpn_run(tun_fd, udp_fd, &peer);
 }
